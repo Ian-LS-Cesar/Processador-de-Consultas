@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.grupo8.processadorconsultas/com.grupo8.processadorconsultas.HelloApplication
+                                com.grupo8.processadorconsultas/com.grupo8.processadorconsultas.view.MainApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
