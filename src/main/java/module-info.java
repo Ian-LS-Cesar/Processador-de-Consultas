@@ -8,6 +8,6 @@ module com.grupo8.processadorconsultas {
     // Caso você use FXML no futuro
     opens com.grupo8.processadorconsultas to javafx.fxml;
 
-    exports com.grupo8.processadorconsultas;
+    // exports com.grupo8.processadorconsultas;
     exports com.grupo8.processadorconsultas.view;
 }
