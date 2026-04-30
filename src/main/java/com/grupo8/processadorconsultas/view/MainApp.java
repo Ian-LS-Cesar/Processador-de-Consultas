@@ -20,6 +20,18 @@ public class MainApp extends Application {
     private TextArea outputGrafo;
     private TextArea outputPlano;
 
+    private static class PartesSQL {
+        final String colunas;
+        final String tabela;
+        final String condicao;
+
+        PartesSQL(String colunas, String tabela, String condicao) {
+            this.colunas = colunas;
+            this.tabela = tabela;
+            this.condicao = condicao;
+        }
+    }
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Processador de Consultas SQL - Unifor");
@@ -91,13 +103,48 @@ public class MainApp extends Application {
             NoGrafo grafoOtimizado = OtimizadorHeuristico.otimizar(sql);
             outputGrafo.setText(grafoOtimizado.imprimir(""));
 
-            // HU5: Plano de Execução (Ordem)
-            // Aqui você extrai as partes novamente ou passa objetos entre as classes
-            outputPlano.setText(gerarPlanoExecucao("cliente", "id > 10", "nome"));
+            // HU5: Plano de Execução (Ordem) com base na SQL atual
+            PartesSQL partes = extrairPartesBasicas(sql);
+            outputPlano.setText(gerarPlanoExecucao(partes.tabela, partes.condicao, partes.colunas));
 
         } catch (Exception ex) {
+            outputAlgebra.clear();
+            outputGrafo.clear();
+            outputPlano.clear();
             mostrarAlerta("Erro", ex.getMessage());
         }
+    }
+
+    private PartesSQL extrairPartesBasicas(String sql) throws Exception {
+        String query = sql.trim().replaceAll("\\s+", " ");
+        String queryLower = query.toLowerCase();
+
+        int idxSelect = queryLower.indexOf("select");
+        int idxFrom = queryLower.indexOf("from");
+
+        if (idxSelect != 0 || idxFrom < 0) {
+            throw new Exception("Erro de Sintaxe: A consulta deve iniciar com SELECT e conter FROM.");
+        }
+
+        String colunas = query.substring(idxSelect + 6, idxFrom).trim();
+        String resto = query.substring(idxFrom + 4).trim();
+
+        String tabela;
+        String condicao = "";
+
+        int idxWhere = resto.toLowerCase().indexOf("where");
+        if (idxWhere >= 0) {
+            tabela = resto.substring(0, idxWhere).trim();
+            condicao = resto.substring(idxWhere + 5).trim();
+        } else {
+            tabela = resto;
+        }
+
+        if (colunas.isEmpty() || tabela.isEmpty()) {
+            throw new Exception("Erro de Sintaxe: SELECT/FROM incompletos.");
+        }
+
+        return new PartesSQL(colunas, tabela, condicao);
     }
 
     private void mostrarAlerta(String titulo, String mensagem) {
