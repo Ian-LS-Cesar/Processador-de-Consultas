@@ -1,7 +1,6 @@
 package com.grupo8.processadorconsultas.view;
 
 import com.grupo8.processadorconsultas.algebra.ConversorAlgebra;
-import com.grupo8.processadorconsultas.algebra.GeradorGrafo;
 import com.grupo8.processadorconsultas.algebra.NoGrafo;
 import com.grupo8.processadorconsultas.optimizer.OtimizadorHeuristico;
 import javafx.application.Application;
@@ -10,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import com.grupo8.processadorconsultas.model.Catalogo; // Certifique-se que o pacote está correto
 import parser.ValidadorSQL;
 
 public class MainApp extends Application {
